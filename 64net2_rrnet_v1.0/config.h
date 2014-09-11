@@ -8,8 +8,8 @@
 /* target architecture */
 
 #ifndef __FreeBSD__
-#define LINUX
-//#define BSD
+//#define LINUX
+#define BSD
 //#define SOLARIS
 //#define BEOS
 //#define WINDOWS

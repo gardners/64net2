@@ -4,7 +4,7 @@
  */
 
 #include "config.h"
-#include "error.h"
+#include "fs_error.h"
 #include "client-comm.h"
 
 /* ** CBM DOS emulation stuff: */

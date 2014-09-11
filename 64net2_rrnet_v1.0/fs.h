@@ -104,6 +104,10 @@ extern int partn_dirsectors[MAX_CLIENTS][MAX_PARTITIONS];
 extern int curr_dirtracks[MAX_CLIENTS][MAX_PARTITIONS];
 extern int curr_dirsectors[MAX_CLIENTS][MAX_PARTITIONS];
 extern int curr_par[MAX_CLIENTS];
+#ifndef LINUX
+typedef unsigned short	__uid_t;
+typedef unsigned short	__gid_t;
+#endif
 extern __uid_t client_uid[MAX_CLIENTS];
 extern __gid_t client_gid[MAX_CLIENTS];
 extern int client_umask[MAX_CLIENTS];
