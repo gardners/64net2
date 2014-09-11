@@ -1,15 +1,21 @@
+#ifdef LINUX
 #include "/usr/include/linux/ioctl.h"
+#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <net/ethernet.h>
+#ifdef LINUX
 #include <netinet/if_ether.h>
 #include <netinet/ether.h>
+#endif
 
 #include <math.h>
 
