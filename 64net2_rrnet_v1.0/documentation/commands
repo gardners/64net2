@@ -1,0 +1,62 @@
+m-w:
+Same as in 1541
+
+m-e:
+Not implemented
+
+m-r:
+Same as in 1541
+
+ux:
+Mostly not implemented
+
+format,new,n:
+Usage: format:<header>,<id>
+Formats the currently mounted disk-image if applicable.
+
+rename,r:
+Usage: rename:<newfile>=<oldfile>
+Renames <oldfile> into <newfile>.
+Wildcards are not allowed in <newfile>.
+
+move,mv:
+Usage: move<partition>:<target>=<filename>
+Moves <filename> to the path specified by <target>. The <partiton> is also part of the target.
+This function works also between different media.
+Wildcards are allowed for <filename> but only the first hit will be copied.
+
+copy,c:
+Usage: copy<partition>:<target>=<filename>
+Copies <filename> to the path specified by <target>. The <partiton> is also part of the target.
+This function works also between different media.
+Wildcards are allowed for <filename> but only the first hit will be copied.
+
+mkdir:
+Usage: mkdir:<dirname>
+Creates a new dir named <dirname>
+
+rmdir:
+Usage: rmdir:<dirname>
+Removes the dir <dirname> if empty. Diskimages also count as dirs, but can't yet be removed by this.
+Wildcards are allowed and each hit will be removed.
+
+scratch,s,rm:
+Usage: scratch:<filename>
+Removes the <filename>. Directories and disk-images are not evaluated.
+Wildcards are allowed and each hit will be removed.
+
+create:
+Usage: create<imagename>.<ext>,<header>,<id>
+Creates a diskimage of type <ext> (allowed values are .d64, d71, d81). <header> and <id> is optional.
+
+validate,v:
+Usage: v:
+Validates currently mounted disk-image.
+
+Validate,V:
+Usage: V:
+Validates currently mounted disk-image with bam-check.
+
+i:
+Usage: i:
+Initialises drive (current client) and resets all partitiosn and dirs to original values.

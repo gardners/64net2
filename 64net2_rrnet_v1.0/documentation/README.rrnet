@@ -1,0 +1,95 @@
+1. INSTALLING
+
+unzip and untar the tarball, then change into the directory 'rrnet' and type 'make' to build the binaries.
+
+tar -zxvf rrnetfoo.tar.gz
+cd server
+make
+
+2. CONFIGURATION
+
+copy the examples/64net.conf to /etc and edit it, so that it fits your needs. The values are kind of self explanatory.
+There are client sectiosn for each client you want to define and allow access to your server. each section contains a bunch of configurable values.
+
+4. MODIFYING THE C64 KERNAL
+
+Change into the tools directory and run the program ./makerom with the needed parameters. It will then spit out a patched kernal image with fixed mac/ip-addresses.
+Then burn the patched kernal on a 27c64 EPROM or some pin-compatible flash or EEPROM like an 28C64. Now place the new kernal in your c64 (you'll need a kernal-adaptor for that, for example have a look at http://www.ihlaid.de/rom_adapter.html to see how to build your own), switch on your c64 and see if your link LED at your rr-net comes on. 
+After installing the new kernal the C64 should come up as usual. If there is any strange behaviour you might have done a mistake when burning the (E)EPROM or building the adapter. So better recheck your adapter or verify the content of the (E)EPROM. Also have a look at the troubleshooting section, if you run a newer version of the RR Rom (>v3.1)
+Also be aware that the modified kernal code needs some space and thus i have thrown out handling for rs232 interfaces and some tape routines. So loading from tape and rs232 will not work anymore. This is not a bug, but a great feature. Don't stick to outdated technologies while just installing the most forward one ;-)
+
+5. STARTING 64NET/2
+
+For a first try then start 64net/2 manually by entering: ./bin/64net2 
+Be sure you have root-permissions, as 64net needs to set up the static arp route and else fails.
+
+Now there should appear something like the following and the shell-prompt should not occur (unless you kill the programm with ctrl-c):
+64NET/2 server V1.00 RRNET
+INIT: Communication port set to 5000
+INIT client #0: reading config for client 'bitbreaker'
+INIT client #0: client uid set to 'bitbreaker'
+INIT client #0: client gid set to 'bitbreaker'
+INIT client #0: client umask set to '660'
+INIT client #0:  /home/bitbreaker/files added as partition 1
+INIT client #0:  /home/bitbreaker/files/tools added as partition 2
+INIT client #0: client MAC set to 00:00:00:64:64:64
+INIT client #0: client IP set to 192.168.2.64
+INIT client #1: reading config for client 'drago'
+INIT client #1: client uid set to 'drago'
+INIT client #1: client gid set to 'drago'
+INIT client #1: client umask set to '660'
+INIT client #1:  /home/drago/files added as partition 1
+INIT client #1: client MAC set to 00:00:00:64:64:65
+INIT client #1: client IP set to 192.168.2.65
+Network started.
+
+If that doesn't happen, an appropriate error should be shown, that will hopefully tell you what you should fix (mostly a wrong or unknown path in the 64net.conf). If not, have a look into the troubleshooting-section first, before bothering the developers :-)
+
+It is time for a first test, how's about loading the dir? Use the command load"$",9 on your C64 and see if you get something like this:
+
+load"$",9
+searching for $
+loading $0801 $xxxx
+ready.
+
+On the PC there will be the following output:
+
+*** Opening [$] on channel $00
+1016 bytes transferred in 0.88s => 1.134 kb/s
+
+Fine, you are now using 64net/2 successfully with your rr-net, have fun.
+
+6. TROUBLESHOOTING
+
+- If the c64 just hangs you might have set a wrong IP or MAC-address. A tcpdump -XX on the PC side to see if there is happening anything on the network. 
+Also you should take care that the PC accepts packets at UDP port 5000 (firewall) and not any other daemon is listening at that port.
+Also observe if the activity LED at the rr-net is blinking for short when you try to load a file from device #9. If not something more serious has gone wrong, mostly with the kernal itself. Else the c64 is submitting packets, but they might reach a wrong destination or not reach the right destination for some other reasons, like getting filtered out by a firewall.
+
+- The patched kernal-image only works with a RetroReplay ROM 3.0 and 3.1, as well with an AR ROM, for newer Versions you need to patch two bytes of the kernal by hand (not yet implemented in the makerom-tool). Unfortunatedly each version of the RR ROM expects a different value to be set at $de01.  
+So for newer version of the RR set the following values in the kernal image:
+$1483 : $40 (was $00) 
+$140a : $41 (was $01) 
+
+7. THE PROTOCOL
+
+The protocol consists of UDP-packets with standard UDP header and as payload the following:
+Data packet:
+$44 length data		(PC -> C64)
+$44 $00 data length	(C64 -> PC)
+
+Command packet:
+$43 command
+
+Acknowledge packet:
+$41 $00
+
+Error packet
+$45 errornumber
+
+8. 64NET/2 AS A DEAMON - INIT-SCRIPT
+
+For more convenience add the examples/64net.initscript to your startupscripts
+
+Modify the appropriate variables so that they fit your path.
+Now you can start and stop the 64net-Server by using /etc/init.d/64net start|stop
+Also you can add this script to a certain runlevel, so that it will be started automatically at bootup of your system. 

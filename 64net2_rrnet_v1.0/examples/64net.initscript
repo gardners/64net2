@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:
+DAEMON=/home/bitbreaker/rrnet/bin/64net2
+WORKINGDIR=/home/bitbreaker/rrnet
+
+
+OPTIONS=""
+
+case "$1" in
+  start)
+	echo -n "Starting c64-fileserver: 64net "
+        if start-stop-daemon --quiet --stop --signal 0 --chdir $WORKINGDIR --exec $DAEMON
+	then
+		echo "[already running]"
+	else
+		start-stop-daemon -b --start --quiet --chdir $WORKINGDIR --exec $DAEMON -- $OPTIONS
+		echo "."
+	fi
+	;;
+  stop)
+	echo -n "Stopping c64-fileserver: 64net "
+	if start-stop-daemon --quiet --stop --signal 0 --chdir $WORKINGDIR --exec $DAEMON
+	then
+		start-stop-daemon --quiet --stop --chdir $WORKINGDIR --exec $DAEMON 
+		echo "."
+	else
+		echo "[not running]";
+	fi
+	;;
+  restart)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+  *)
+	echo "Usage: /etc/init.d/64net {start|stop|restart}"
+	exit 1
+esac
+
+exit 0
