@@ -7,6 +7,7 @@
 //}
 
 int arp_set(char* ip, char* mac) {
+#ifdef SIOCSARP	
 	int sockfd;
 	struct arpreq req;
 	struct ether_addr* mac_addr;
@@ -27,7 +28,6 @@ int arp_set(char* ip, char* mac) {
 
 	//set needed flags (commit and add permanently)
 	req.arp_flags = ATF_PERM | ATF_COM;
-	
 	//set correct device
 	strcpy(req.arp_dev, "");	//alternatively: "eth0"
 
@@ -40,9 +40,14 @@ int arp_set(char* ip, char* mac) {
 	}
 	close(sockfd);
 	return (1);
+#else
+        char cmd[1024];
+	snprintf(cmd,1024,"arp -s %s %s\n",ip,mac);
+#endif
 }
 
 int arp_del(char* ip) {
+#ifdef SIOCDARP
         int sockfd;
         struct arpreq req;
         struct hostent* hp;
@@ -70,5 +75,10 @@ int arp_del(char* ip) {
         }
         close(sockfd);
         return (1);
+#else
+        char cmd[1024];
+        snprintf(cmd,1024,"arp -d %s\n",ip);
+#endif
+
 }
 
