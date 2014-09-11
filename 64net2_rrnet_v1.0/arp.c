@@ -43,6 +43,7 @@ int arp_set(char* ip, char* mac) {
 #else
         char cmd[1024];
 	snprintf(cmd,1024,"arp -s %s %s\n",ip,mac);
+	system(cmd);
 #endif
 }
 
@@ -78,6 +79,7 @@ int arp_del(char* ip) {
 #else
         char cmd[1024];
         snprintf(cmd,1024,"arp -d %s\n",ip);
+	system(cmd);
 #endif
 
 }
