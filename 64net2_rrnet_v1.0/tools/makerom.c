@@ -19,7 +19,7 @@
 
 #include <math.h>
 
-#define IP_HEADER_OFFSET 0x1898
+#define IP_HEADER_OFFSET 0x1897
 #define CLOCKP_ENABLE 0x140a
 #define CLOCKP_DISABLE 0x1483
 
